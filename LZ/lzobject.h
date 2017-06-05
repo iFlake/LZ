@@ -6,6 +6,8 @@
 
 namespace LZ
 {
+	class LZobject;
+
 	enum LZobjecttype
 	{
 		lz_integer    = 0x00,
@@ -17,6 +19,10 @@ namespace LZ
 
 	union LZobjectvalue
 	{
+	public:
+		LZobjectvalue() { };
+		~LZobjectvalue() { };
+
 		unsigned long long lz_integer;
 		float lz_float;
 		bool lz_boolean;
@@ -27,6 +33,9 @@ namespace LZ
 	class LZobject
 	{
 	public:
+		LZobject() { };
+		~LZobject() { };
+
 		LZobjecttype lz_type;
 		LZobjectvalue lz_value;
 	};
