@@ -10,16 +10,21 @@ namespace LZ
 	class LZvm
 	{
 	public:
+		//stack
 		void Push(LZref item);
 		LZref Pop();
+
 		//void Call();
+
+		//memory management
 		LZobject* Dereference(LZref reference);
-		void Allocate(LZobject* object);
+		LZref Allocate(LZobject* object);
+		void Deallocate(LZref reference);
 
 	protected:
 		std::stack<LZref> lz_stack;
-		std::vector<LZextidentifiervalue> lz_heap;
+		std::vector<LZobject*> lz_heap;
 
-		LZref AllocateAddress();
+		std::vector<LZref> lz_freeindexes;
 	};
 }

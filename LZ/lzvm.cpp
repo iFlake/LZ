@@ -16,37 +16,37 @@ namespace LZ
 
 	LZobject* LZvm::Dereference(LZref reference)
 	{
-		for (int iterator = 0; iterator < lz_heap.size(); ++iterator)
+		return lz_heap.at((unsigned long long) reference);
+	}
+
+	LZref LZvm::Allocate(LZobject* object)
+	{
+		if (lz_freeindexes.size() > 0)
 		{
-			LZextidentifiervalue iv = lz_heap.at(iterator);
+			LZref address = lz_freeindexes.at(0);
+
+			lz_heap[(unsigned long long) address] = object;
+			lz_freeindexes.erase(lz_freeindexes.begin());
+
+			return address;
+		}
+		else
+		{
+			lz_heap.push_back(object);
 			
-			if (iv.identifier == reference) return iv.value;
+			LZref address = lz_heap.size() - 1;
+			return address;
 		}
-
-		return nullptr;
 	}
 
-	void LZvm::Allocate(LZobject* object)
+	void LZvm::Deallocate(LZref reference)
 	{
-		LZref address = AllocateAddress();
+		delete lz_heap.at((unsigned long long) reference);
 
-		LZextidentifiervalue iv;
-		iv.identifier = address;
-		iv.value = object;
+		LZobject* null = new LZobject;
+		null->lz_type = lz_null;
+		null->lz_value = nullptr;
 
-		lz_heap.push_back(iv);
-	}
-
-	LZref LZvm::AllocateAddress()
-	{
-		LZref address = 1;
-
-		while (true)
-		{
-			if (Dereference(address) == nullptr) return address;
-			++address;
-		}
-
-		return address;
+		lz_heap[(unsigned long long) reference] = null;
 	}
 }
